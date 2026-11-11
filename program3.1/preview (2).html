@@ -1,0 +1,2583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Continuous Probability Distributions</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f4f7fb;
+      color: #1e293b;
+      line-height: 1.6;
+    }
+
+    /* =========================
+       NAVIGATION
+    ========================= */
+
+    nav {
+      background: #0f172a;
+      color: white;
+      padding: 15px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .logo span {
+      color: #38bdf8;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 5px;
+      list-style: none;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .nav-links button {
+      background: transparent;
+      border: none;
+      color: #cbd5e1;
+      padding: 9px 12px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 13px;
+    }
+
+    .nav-links button:hover,
+    .nav-links button.active {
+      background: #1e293b;
+      color: white;
+    }
+
+    /* =========================
+       PAGES
+    ========================= */
+
+    .page {
+      display: none;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1250px;
+      margin: auto;
+      padding: 40px 0;
+    }
+
+    /* =========================
+       HOME
+    ========================= */
+
+    .hero {
+      min-height: 470px;
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(135deg, #0f172a, #172554, #0369a1);
+      color: white;
+    }
+
+    .hero-content {
+      width: 90%;
+      max-width: 1250px;
+      margin: auto;
+      padding: 60px 0;
+    }
+
+    .hero h1 {
+      color: white;
+      max-width: 850px;
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.12;
+    }
+
+    .hero h1 span {
+      color: #38bdf8;
+    }
+
+    .hero p {
+      max-width: 750px;
+      color: #cbd5e1;
+      font-size: 17px;
+      margin: 20px 0 28px;
+    }
+
+    .start-btn {
+      border: none;
+      background: #38bdf8;
+      color: #082f49;
+      font-weight: 700;
+      padding: 13px 22px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .start-btn:hover {
+      background: #7dd3fc;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .section-title h2 {
+      font-size: 30px;
+      color: #0f172a;
+    }
+
+    .section-title p {
+      max-width: 700px;
+      margin: auto;
+      color: #64748b;
+    }
+
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .module-card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 25px;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+      transition: 0.2s;
+    }
+
+    .module-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+    }
+
+    .icon {
+      width: 48px;
+      height: 48px;
+      background: #e0f2fe;
+      color: #0369a1;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 15px;
+    }
+
+    .module-card h3 {
+      margin-bottom: 8px;
+      color: #0f172a;
+    }
+
+    .module-card p {
+      color: #64748b;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .module-btn {
+      border: 1px solid #0284c7;
+      color: #0369a1;
+      background: white;
+      padding: 9px 14px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .module-btn:hover {
+      background: #e0f2fe;
+    }
+
+    /* =========================
+       MODULE HEADER
+    ========================= */
+
+    .module-header {
+      background: #0f172a;
+      color: white;
+    }
+
+    .module-header .container {
+      padding: 38px 0;
+    }
+
+    .module-header h1 {
+      color: white;
+      font-size: 35px;
+      margin-bottom: 5px;
+    }
+
+    .module-header p {
+      color: #cbd5e1;
+    }
+
+    /* =========================
+       CARDS
+    ========================= */
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 22px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
+    }
+
+    .card.full {
+      grid-column: 1 / -1;
+    }
+
+    .card h2 {
+      color: #0f172a;
+      margin-bottom: 14px;
+      font-size: 21px;
+    }
+
+    /* =========================
+       PROBLEM
+    ========================= */
+
+    .problem {
+      border-left: 5px solid #0ea5e9;
+    }
+
+    .problem p {
+      color: #475569;
+    }
+
+    .example-box {
+      background: #f8fafc;
+      border-radius: 9px;
+      padding: 14px;
+      margin-top: 15px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .example-box strong {
+      color: #0369a1;
+    }
+
+    /* =========================
+       INPUTS
+    ========================= */
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    .input-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 6px;
+    }
+
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .input-wrapper input {
+      width: 100%;
+      padding: 10px 11px;
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .input-wrapper input:focus {
+      border-color: #0284c7;
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1);
+    }
+
+    .unit {
+      min-width: 42px;
+      color: #64748b;
+      font-size: 13px;
+    }
+
+    .error {
+      display: none;
+      margin-top: 15px;
+      padding: 11px 13px;
+      background: #fef2f2;
+      color: #b91c1c;
+      border: 1px solid #fecaca;
+      border-radius: 7px;
+      font-size: 13px;
+    }
+
+    /* =========================
+       FORMULA
+    ========================= */
+
+    .formula {
+      background: #f8fafc;
+      border: 1px dashed #94a3b8;
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+      font-family: Georgia, serif;
+      font-size: 19px;
+      color: #0f172a;
+      margin-bottom: 15px;
+    }
+
+    .formula-note {
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    /* =========================
+       RESULTS
+    ========================= */
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 13px;
+    }
+
+    .result {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 9px;
+      padding: 15px;
+    }
+
+    .result .label {
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 3px;
+    }
+
+    .result .value {
+      font-size: 22px;
+      font-weight: 800;
+      color: #0369a1;
+    }
+
+    .result .sub {
+      font-size: 11px;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+
+    /* =========================
+       QUALITY INTERPRETATION
+    ========================= */
+
+    .interpretation {
+      padding: 18px;
+      border-radius: 9px;
+      background: #eff6ff;
+      border-left: 5px solid #2563eb;
+    }
+
+    .interpretation h3 {
+      color: #1e40af;
+      margin-bottom: 7px;
+    }
+
+    .interpretation p {
+      color: #334155;
+      font-size: 14px;
+    }
+
+    /* =========================
+       CANVAS
+    ========================= */
+
+    .chart-container {
+      position: relative;
+      width: 100%;
+      height: 430px;
+      background: #fafcff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      font-size: 12px;
+      color: #475569;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-box {
+      width: 13px;
+      height: 13px;
+      border-radius: 3px;
+    }
+
+    .acceptable {
+      background: #22c55e;
+    }
+
+    .defective-left {
+      background: #f97316;
+    }
+
+    .defective-right {
+      background: #ef4444;
+    }
+
+    .density-line {
+      background: #2563eb;
+    }
+
+    /* =========================
+       EXPLANATION
+    ========================= */
+
+    .plain-language {
+      margin-top: 15px;
+      padding: 15px;
+      background: #f8fafc;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #475569;
+    }
+
+    /* =========================
+       FOOTER
+    ========================= */
+
+    footer {
+      background: #0f172a;
+      color: #94a3b8;
+      text-align: center;
+      padding: 25px;
+      margin-top: 30px;
+      font-size: 13px;
+    }
+
+    /* =========================
+       RESPONSIVE
+    ========================= */
+
+    @media (max-width: 900px) {
+
+      .module-grid,
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card.full {
+        grid-column: auto;
+      }
+    }
+
+    @media (max-width: 600px) {
+
+      nav {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .nav-links {
+        justify-content: center;
+      }
+
+      .nav-links button {
+        font-size: 11px;
+        padding: 7px;
+      }
+
+      .container {
+        width: 92%;
+        padding: 28px 0;
+      }
+
+      .hero-content {
+        padding: 45px 0;
+      }
+
+      .hero h1 {
+        font-size: 34px;
+      }
+
+      .module-header h1 {
+        font-size: 28px;
+      }
+
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .chart-container {
+        height: 350px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ======================================================
+     NAVIGATION
+====================================================== -->
+
+<nav>
+
+  <div class="logo" onclick="showPage('home')">
+    Probability<span>Lab</span>
+  </div>
+
+  <ul class="nav-links">
+
+    <li>
+      <button class="nav-btn active"
+              data-page="home"
+              onclick="showPage('home')">
+        Home
+      </button>
+    </li>
+
+    <li>
+      <button class="nav-btn"
+              data-page="normal"
+              onclick="showPage('normal')">
+        Normal Distribution
+      </button>
+    </li>
+
+    <li>
+      <button class="nav-btn"
+              data-page="exponential"
+              onclick="showPage('exponential')">
+        Exponential Distribution
+      </button>
+    </li>
+
+    <li>
+      <button class="nav-btn"
+              data-page="clt"
+              onclick="showPage('clt')">
+        Central Limit Theorem
+      </button>
+    </li>
+
+  </ul>
+
+</nav>
+
+
+<main>
+
+<!-- ======================================================
+     HOME
+====================================================== -->
+
+<section id="home" class="page active">
+
+  <div class="hero">
+
+    <div class="hero-content">
+
+      <h1>
+        Continuous Probability Distributions:
+        <span>Industry Applications</span>
+      </h1>
+
+      <p>
+        Learn how probability distributions are applied to
+        real-world problems in manufacturing, cloud computing,
+        and warehouse operations.
+      </p>
+
+      <button class="start-btn"
+              onclick="showPage('normal')">
+        Start Learning →
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div class="container">
+
+    <div class="section-title">
+
+      <h2>
+        Explore the Modules
+      </h2>
+
+      <p>
+        Understand continuous probability concepts using
+        simple industry-based examples.
+      </p>
+
+    </div>
+
+
+    <div class="module-grid">
+
+      <div class="module-card">
+
+        <div class="icon">
+          📊
+        </div>
+
+        <h3>
+          Normal Distribution
+        </h3>
+
+        <p>
+          Manufacturing Quality Control
+        </p>
+
+        <button class="module-btn"
+                onclick="showPage('normal')">
+          Open Module →
+        </button>
+
+      </div>
+
+
+      <div class="module-card">
+
+        <div class="icon">
+          ☁️
+        </div>
+
+        <h3>
+          Exponential Distribution
+        </h3>
+
+        <p>
+          Cloud Request Inter-arrival Time
+        </p>
+
+        <button class="module-btn"
+                onclick="showPage('exponential')">
+          Open Module →
+        </button>
+
+      </div>
+
+
+      <div class="module-card">
+
+        <div class="icon">
+          📦
+        </div>
+
+        <h3>
+          Central Limit Theorem
+        </h3>
+
+        <p>
+          Warehouse Processing Time
+        </p>
+
+        <button class="module-btn"
+                onclick="showPage('clt')">
+          Open Module →
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ======================================================
+     NORMAL DISTRIBUTION
+====================================================== -->
+
+<section id="normal" class="page">
+
+  <div class="module-header">
+
+    <div class="container">
+
+      <h1>
+        Normal Distribution
+      </h1>
+
+      <p>
+        Manufacturing Quality Control
+      </p>
+
+    </div>
+
+  </div>
+
+
+  <div class="container">
+
+    <div class="content-grid">
+
+
+      <!-- INDUSTRY PROBLEM -->
+
+      <div class="card full problem">
+
+        <h2>
+          🏭 Industry Problem
+        </h2>
+
+        <p>
+          A manufacturing company produces shafts with a target
+          diameter of <strong>10 mm</strong>. Due to small
+          manufacturing variations, the actual diameter of each
+          shaft is not exactly the same.
+        </p>
+
+        <p style="margin-top: 10px;">
+          The quality-control team wants to estimate how many
+          shafts will satisfy the specification limits.
+        </p>
+
+        <div class="example-box">
+
+          <strong>Illustrative Example</strong>
+
+          <br>
+
+          Target diameter:
+          <strong>10 mm</strong>
+
+          <br>
+
+          Mean:
+          <strong>μ = 10 mm</strong>
+
+          <br>
+
+          Standard deviation:
+          <strong>σ = 0.05 mm</strong>
+
+          <br>
+
+          Acceptable range:
+          <strong>9.90 mm to 10.10 mm</strong>
+
+        </div>
+
+      </div>
+
+
+      <!-- INPUTS -->
+
+      <div class="card">
+
+        <h2>
+          ⚙️ Input Parameters
+        </h2>
+
+
+        <div class="input-group">
+
+          <label for="mean">
+            Mean Diameter (μ)
+          </label>
+
+          <div class="input-wrapper">
+
+            <input
+              id="mean"
+              type="number"
+              step="0.001"
+              value="10"
+            >
+
+            <span class="unit">
+              mm
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label for="sigma">
+            Standard Deviation (σ)
+          </label>
+
+          <div class="input-wrapper">
+
+            <input
+              id="sigma"
+              type="number"
+              step="0.001"
+              value="0.05"
+            >
+
+            <span class="unit">
+              mm
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label for="lower">
+            Lower Specification Limit
+          </label>
+
+          <div class="input-wrapper">
+
+            <input
+              id="lower"
+              type="number"
+              step="0.001"
+              value="9.90"
+            >
+
+            <span class="unit">
+              mm
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label for="upper">
+            Upper Specification Limit
+          </label>
+
+          <div class="input-wrapper">
+
+            <input
+              id="upper"
+              type="number"
+              step="0.001"
+              value="10.10"
+            >
+
+            <span class="unit">
+              mm
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label for="selectedX">
+            Selected Diameter (x)
+          </label>
+
+          <div class="input-wrapper">
+
+            <input
+              id="selectedX"
+              type="number"
+              step="0.001"
+              value="10.03"
+            >
+
+            <span class="unit">
+              mm
+            </span>
+
+          </div>
+
+        </div>
+
+
+        <div id="inputError"
+             class="error">
+        </div>
+
+      </div>
+
+
+      <!-- FORMULA -->
+
+      <div class="card">
+
+        <h2>
+          📐 Mathematical Formula
+        </h2>
+
+        <div class="formula">
+
+          f(x) =
+          <span>
+            1
+            /
+            (σ√(2π))
+          </span>
+
+          e<sup>
+            −(x − μ)² / 2σ²
+          </sup>
+
+        </div>
+
+        <p class="formula-note">
+          The Normal CDF is used to calculate probabilities
+          over an interval.
+        </p>
+
+        <div class="formula" style="margin-top: 15px;">
+
+          P(a ≤ X ≤ b)
+          =
+          Φ((b − μ)/σ)
+          −
+          Φ((a − μ)/σ)
+
+        </div>
+
+      </div>
+
+
+      <!-- RESULTS -->
+
+      <div class="card full">
+
+        <h2>
+          📊 Calculated Results
+        </h2>
+
+        <div class="results-grid">
+
+          <div class="result">
+
+            <div class="label">
+              Density at selected diameter
+            </div>
+
+            <div id="densityResult"
+                 class="value">
+              —
+            </div>
+
+            <div class="sub">
+              probability density per mm
+            </div>
+
+          </div>
+
+
+          <div class="result">
+
+            <div class="label">
+              Probability within specification
+            </div>
+
+            <div id="withinResult"
+                 class="value">
+              —
+            </div>
+
+            <div class="sub">
+              P(9.90 ≤ X ≤ 10.10)
+            </div>
+
+          </div>
+
+
+          <div class="result">
+
+            <div class="label">
+              Below lower limit
+            </div>
+
+            <div id="belowResult"
+                 class="value">
+              —
+            </div>
+
+            <div class="sub">
+              P(X &lt; lower limit)
+            </div>
+
+          </div>
+
+
+          <div class="result">
+
+            <div class="label">
+              Above upper limit
+            </div>
+
+            <div id="aboveResult"
+                 class="value">
+              —
+            </div>
+
+            <div class="sub">
+              P(X &gt; upper limit)
+            </div>
+
+          </div>
+
+
+          <div class="result">
+
+            <div class="label">
+              Expected defective products
+            </div>
+
+            <div id="defectiveResult"
+                 class="value">
+              —
+            </div>
+
+            <div class="sub">
+              below + above specification
+            </div>
+
+          </div>
+
+
+          <div class="result">
+
+            <div class="label">
+              Selected diameter
+            </div>
+
+            <div id="selectedResult"
+                 class="value">
+              —
+            </div>
+
+            <div class="sub">
+              current x value
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- GRAPH -->
+
+      <div class="card full">
+
+        <h2>
+          📈 Dynamic Normal Distribution
+        </h2>
+
+        <p style="font-size: 13px; color: #64748b; margin-bottom: 12px;">
+          The graph updates automatically when any input changes.
+          Green represents acceptable production, while orange
+          and red represent defective regions.
+        </p>
+
+        <div class="chart-container">
+
+          <canvas id="normalChart">
+          </canvas>
+
+        </div>
+
+
+        <div class="legend">
+
+          <div class="legend-item">
+
+            <div class="legend-box acceptable">
+            </div>
+
+            Acceptable Region
+
+          </div>
+
+
+          <div class="legend-item">
+
+            <div class="legend-box defective-left">
+            </div>
+
+            Below Lower Limit
+
+          </div>
+
+
+          <div class="legend-item">
+
+            <div class="legend-box defective-right">
+            </div>
+
+            Above Upper Limit
+
+          </div>
+
+
+          <div class="legend-item">
+
+            <div class="legend-box density-line">
+            </div>
+
+            Normal Density Curve
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- INTERPRETATION -->
+
+      <div class="card full">
+
+        <h2>
+          💡 Quality-Control Interpretation
+        </h2>
+
+        <div class="interpretation">
+
+          <h3>
+            What does this mean?
+          </h3>
+
+          <p id="interpretationText">
+            Enter valid values to see the quality-control
+            interpretation.
+          </p>
+
+        </div>
+
+      </div>
+
+
+      <!-- EDUCATIONAL EXPLANATION -->
+
+      <div class="card full">
+
+        <h2>
+          🎓 Beginner Explanation
+        </h2>
+
+        <div class="plain-language">
+
+          <strong>Normal Distribution:</strong>
+
+          The bell-shaped curve represents how shaft diameters
+          are expected to vary around the average diameter.
+
+          <br><br>
+
+          <strong>Specification limits:</strong>
+
+          Shafts between the lower and upper limits are considered
+          acceptable. Shafts outside these limits are treated as
+          defective.
+
+          <br><br>
+
+          <strong>Why CDF?</strong>
+
+          The Normal CDF tells us the probability that a shaft
+          measurement is less than or equal to a particular value.
+          Therefore, subtracting two CDF values gives the probability
+          that the measurement falls between two specification limits.
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ======================================================
+     EXPONENTIAL PLACEHOLDER
+====================================================== -->
+
+<section id="exponential" class="page">
+
+  <div class="module-header">
+
+    <div class="container">
+
+      <h1>
+        Exponential Distribution
+      </h1>
+
+      <p>
+        Cloud Request Inter-arrival Time
+      </p>
+
+    </div>
+
+  </div>
+
+  <div class="container">
+
+    <div class="card">
+
+      <h2>
+        ☁️ Coming Next
+      </h2>
+
+      <p>
+        This module will model the waiting time between
+        cloud requests using the Exponential Distribution.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ======================================================
+     CLT PLACEHOLDER
+====================================================== -->
+
+<section id="clt" class="page">
+
+  <div class="module-header">
+
+    <div class="container">
+
+      <h1>
+        Central Limit Theorem
+      </h1>
+
+      <p>
+        Warehouse Processing Time
+      </p>
+
+    </div>
+
+  </div>
+
+  <div class="container">
+
+    <div class="card">
+
+      <h2>
+        📦 Coming Next
+      </h2>
+
+      <p>
+        This module will demonstrate how sample averages of
+        warehouse processing times behave using the
+        Central Limit Theorem.
+      </p>
+
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<!-- ======================================================
+     FOOTER
+====================================================== -->
+
+<footer>
+
+  Continuous Probability Distributions |
+  Undergraduate AIML Learning Application
+
+</footer>
+
+
+<script>
+
+/* ==========================================================
+   PAGE NAVIGATION
+========================================================== */
+
+function showPage(pageId) {
+
+  const pages = document.querySelectorAll(".page");
+
+  pages.forEach(page => {
+    page.classList.remove("active");
+  });
+
+  const target = document.getElementById(pageId);
+
+  if (target) {
+    target.classList.add("active");
+  }
+
+  const buttons = document.querySelectorAll(".nav-btn");
+
+  buttons.forEach(button => {
+
+    button.classList.remove("active");
+
+    if (button.dataset.page === pageId) {
+      button.classList.add("active");
+    }
+
+  });
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+}
+
+
+/* ==========================================================
+   NORMAL DISTRIBUTION
+========================================================== */
+
+/*
+  Standard Normal PDF
+
+  φ(z) =
+  (1 / √(2π)) e^(-z²/2)
+*/
+
+function standardNormalPDF(z) {
+
+  return (
+    Math.exp(-0.5 * z * z) /
+    Math.sqrt(2 * Math.PI)
+  );
+
+}
+
+
+/*
+  Standard Normal CDF
+
+  Uses the Abramowitz and Stegun
+  approximation.
+
+  This avoids requiring an external
+  mathematical library.
+*/
+
+function standardNormalCDF(z) {
+
+  const sign = z < 0 ? -1 : 1;
+
+  const x = Math.abs(z);
+
+  const t = 1 / (1 + 0.2316419 * x);
+
+  const d = 0.3989422804014327;
+
+  const probability =
+    1 -
+    d *
+    Math.exp(-x * x / 2) *
+    (
+      0.319381530 * t
+      - 0.356563782 * Math.pow(t, 2)
+      + 1.781477937 * Math.pow(t, 3)
+      - 1.821255978 * Math.pow(t, 4)
+      + 1.330274429 * Math.pow(t, 5)
+    );
+
+  return sign === 1
+    ? probability
+    : 1 - probability;
+
+}
+
+
+/*
+  Normal PDF
+
+  f(x) =
+  1/(σ√2π) × exp(-(x-μ)²/(2σ²))
+*/
+
+function normalPDF(x, mu, sigma) {
+
+  const z = (x - mu) / sigma;
+
+  return standardNormalPDF(z) / sigma;
+
+}
+
+
+/*
+  Convert decimal probability
+  into percentage.
+*/
+
+function percentage(value) {
+
+  return (value * 100).toFixed(4) + "%";
+
+}
+
+
+/*
+  Format density value.
+*/
+
+function formatDensity(value) {
+
+  return value.toFixed(4);
+
+}
+
+
+/* ==========================================================
+   GET INPUTS
+========================================================== */
+
+function getNormalInputs() {
+
+  return {
+
+    mu: parseFloat(
+      document.getElementById("mean").value
+    ),
+
+    sigma: parseFloat(
+      document.getElementById("sigma").value
+    ),
+
+    lower: parseFloat(
+      document.getElementById("lower").value
+    ),
+
+    upper: parseFloat(
+      document.getElementById("upper").value
+    ),
+
+    x: parseFloat(
+      document.getElementById("selectedX").value
+    )
+
+  };
+
+}
+
+
+/* ==========================================================
+   VALIDATION
+========================================================== */
+
+function validateInputs(data) {
+
+  const errorBox =
+    document.getElementById("inputError");
+
+  errorBox.style.display = "none";
+
+  errorBox.textContent = "";
+
+  if (
+    !Number.isFinite(data.mu) ||
+    !Number.isFinite(data.sigma) ||
+    !Number.isFinite(data.lower) ||
+    !Number.isFinite(data.upper) ||
+    !Number.isFinite(data.x)
+  ) {
+
+    errorBox.textContent =
+      "Please enter valid numerical values.";
+
+    errorBox.style.display = "block";
+
+    return false;
+
+  }
+
+
+  if (data.sigma <= 0) {
+
+    errorBox.textContent =
+      "Standard deviation σ must be greater than 0.";
+
+    errorBox.style.display = "block";
+
+    return false;
+
+  }
+
+
+  if (data.lower >= data.upper) {
+
+    errorBox.textContent =
+      "The lower specification limit must be less than the upper specification limit.";
+
+    errorBox.style.display = "block";
+
+    return false;
+
+  }
+
+
+  return true;
+
+}
+
+
+/* ==========================================================
+   UPDATE CALCULATIONS
+========================================================== */
+
+function updateNormalDistribution() {
+
+  const data = getNormalInputs();
+
+  if (!validateInputs(data)) {
+
+    return;
+
+  }
+
+
+  /*
+    1. Density at selected diameter
+  */
+
+  const density =
+    normalPDF(
+      data.x,
+      data.mu,
+      data.sigma
+    );
+
+
+  /*
+    2. Probability below lower limit
+
+    P(X < L)
+
+    = Φ((L - μ)/σ)
+  */
+
+  const belowLower =
+    standardNormalCDF(
+      (data.lower - data.mu) /
+      data.sigma
+    );
+
+
+  /*
+    3. Probability below upper limit
+  */
+
+  const belowUpper =
+    standardNormalCDF(
+      (data.upper - data.mu) /
+      data.sigma
+    );
+
+
+  /*
+    4. Probability inside specification
+
+    P(L ≤ X ≤ U)
+    =
+    Φ(U) - Φ(L)
+  */
+
+  const within =
+    belowUpper -
+    belowLower;
+
+
+  /*
+    5. Probability above upper limit
+  */
+
+  const aboveUpper =
+    1 - belowUpper;
+
+
+  /*
+    6. Expected defective percentage
+
+    Defective =
+    below lower +
+    above upper
+  */
+
+  const defective =
+    belowLower +
+    aboveUpper;
+
+
+  /*
+    Update result cards
+  */
+
+  document.getElementById("densityResult")
+    .textContent =
+    formatDensity(density);
+
+  document.getElementById("withinResult")
+    .textContent =
+    percentage(within);
+
+  document.getElementById("belowResult")
+    .textContent =
+    percentage(belowLower);
+
+  document.getElementById("aboveResult")
+    .textContent =
+    percentage(aboveUpper);
+
+  document.getElementById("defectiveResult")
+    .textContent =
+    percentage(defective);
+
+  document.getElementById("selectedResult")
+    .textContent =
+    data.x.toFixed(3) + " mm";
+
+
+  /*
+    Update interpretation
+  */
+
+  updateInterpretation(
+    within,
+    defective,
+    belowLower,
+    aboveUpper,
+    data
+  );
+
+
+  /*
+    Update graph
+  */
+
+  drawNormalChart(data);
+
+}
+
+
+/* ==========================================================
+   QUALITY INTERPRETATION
+========================================================== */
+
+function updateInterpretation(
+  within,
+  defective,
+  belowLower,
+  aboveUpper,
+  data
+) {
+
+  const text =
+    document.getElementById(
+      "interpretationText"
+    );
+
+  const acceptablePercent =
+    within * 100;
+
+  const defectivePercent =
+    defective * 100;
+
+
+  let qualityMessage = "";
+
+
+  if (defectivePercent < 1) {
+
+    qualityMessage =
+      "The process shows very good quality performance. " +
+      "Only a small percentage of shafts are expected to fall " +
+      "outside the specification limits.";
+
+  }
+
+  else if (defectivePercent < 5) {
+
+    qualityMessage =
+      "The process has a moderate level of expected defects. " +
+      "The manufacturing team should monitor the variation " +
+      "and consider process improvement if this defect rate " +
+      "is higher than the company's target.";
+
+  }
+
+  else {
+
+    qualityMessage =
+      "A relatively large percentage of shafts are expected " +
+      "to be outside the specification limits. This suggests " +
+      "that the manufacturing process may need investigation " +
+      "or tighter control.";
+
+  }
+
+
+  text.innerHTML = `
+
+    Approximately
+    <strong>${acceptablePercent.toFixed(3)}%</strong>
+    of shafts are expected to meet the specification
+    limits of
+    <strong>${data.lower.toFixed(3)} mm</strong>
+    to
+    <strong>${data.upper.toFixed(3)} mm</strong>.
+
+    <br><br>
+
+    The expected defective percentage is
+    <strong>${defectivePercent.toFixed(3)}%</strong>.
+
+    Of this defective production,
+    approximately
+    <strong>${(belowLower * 100).toFixed(3)}%</strong>
+    is expected to be below the lower limit and
+    <strong>${(aboveUpper * 100).toFixed(3)}%</strong>
+    above the upper limit.
+
+    <br><br>
+
+    ${qualityMessage}
+
+  `;
+
+}
+
+
+/* ==========================================================
+   DRAW NORMAL DISTRIBUTION
+========================================================== */
+
+function drawNormalChart(data) {
+
+  const canvas =
+    document.getElementById(
+      "normalChart"
+    );
+
+  const ctx =
+    canvas.getContext("2d");
+
+
+  /*
+    Handle high-DPI screens.
+  */
+
+  const rect =
+    canvas.getBoundingClientRect();
+
+  const dpr =
+    window.devicePixelRatio || 1;
+
+  canvas.width =
+    rect.width * dpr;
+
+  canvas.height =
+    rect.height * dpr;
+
+  ctx.scale(dpr, dpr);
+
+
+  const width =
+    rect.width;
+
+  const height =
+    rect.height;
+
+
+  /*
+    Chart margins.
+  */
+
+  const margin = {
+
+    left: 60,
+
+    right: 25,
+
+    top: 25,
+
+    bottom: 55
+
+  };
+
+
+  const graphWidth =
+    width -
+    margin.left -
+    margin.right;
+
+  const graphHeight =
+    height -
+    margin.top -
+    margin.bottom;
+
+
+  /*
+    X-axis range.
+
+    We show approximately
+    ±4 standard deviations.
+  */
+
+  let minX =
+    Math.min(
+      data.mu - 4 * data.sigma,
+      data.lower - data.sigma,
+      data.upper - data.sigma
+    );
+
+  let maxX =
+    Math.max(
+      data.mu + 4 * data.sigma,
+      data.lower + data.sigma,
+      data.upper + data.sigma
+    );
+
+
+  /*
+    Add a little visual padding.
+  */
+
+  const padding =
+    (maxX - minX) * 0.06;
+
+  minX -= padding;
+  maxX += padding;
+
+
+  /*
+    Find maximum density.
+  */
+
+  let maxDensity = 0;
+
+  const samples = 500;
+
+  for (let i = 0; i <= samples; i++) {
+
+    const x =
+      minX +
+      (maxX - minX) *
+      (i / samples);
+
+    const y =
+      normalPDF(
+        x,
+        data.mu,
+        data.sigma
+      );
+
+    maxDensity =
+      Math.max(
+        maxDensity,
+        y
+      );
+
+  }
+
+
+  maxDensity *= 1.15;
+
+
+  /*
+    Convert data coordinates
+    to canvas coordinates.
+  */
+
+  function mapX(x) {
+
+    return (
+      margin.left +
+      (
+        (x - minX) /
+        (maxX - minX)
+      ) *
+      graphWidth
+    );
+
+  }
+
+
+  function mapY(y) {
+
+    return (
+      margin.top +
+      graphHeight -
+      (
+        y / maxDensity
+      ) *
+      graphHeight
+    );
+
+  }
+
+
+  /*
+    Clear canvas.
+  */
+
+  ctx.clearRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  /*
+    Background.
+  */
+
+  ctx.fillStyle =
+    "#fafcff";
+
+  ctx.fillRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  /*
+    Shade region helper.
+
+    regionStart and regionEnd
+    are X values.
+  */
+
+  function shadeRegion(
+    regionStart,
+    regionEnd,
+    fillColor
+  ) {
+
+    const start =
+      Math.max(
+        minX,
+        regionStart
+      );
+
+    const end =
+      Math.min(
+        maxX,
+        regionEnd
+      );
+
+    if (start >= end) {
+      return;
+    }
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      mapX(start),
+      mapY(0)
+    );
+
+
+    const points = 100;
+
+    for (let i = 0; i <= points; i++) {
+
+      const x =
+        start +
+        (end - start) *
+        (i / points);
+
+      const y =
+        normalPDF(
+          x,
+          data.mu,
+          data.sigma
+        );
+
+      ctx.lineTo(
+        mapX(x),
+        mapY(y)
+      );
+
+    }
+
+
+    ctx.lineTo(
+      mapX(end),
+      mapY(0)
+    );
+
+    ctx.closePath();
+
+    ctx.fillStyle =
+      fillColor;
+
+    ctx.fill();
+
+  }
+
+
+  /*
+    LEFT DEFECTIVE REGION
+  */
+
+  shadeRegion(
+    minX,
+    data.lower,
+    "rgba(249,115,22,0.35)"
+  );
+
+
+  /*
+    ACCEPTABLE REGION
+  */
+
+  shadeRegion(
+    data.lower,
+    data.upper,
+    "rgba(34,197,94,0.35)"
+  );
+
+
+  /*
+    RIGHT DEFECTIVE REGION
+  */
+
+  shadeRegion(
+    data.upper,
+    maxX,
+    "rgba(239,68,68,0.35)"
+  );
+
+
+  /*
+    Draw density curve.
+  */
+
+  ctx.beginPath();
+
+  for (let i = 0; i <= samples; i++) {
+
+    const x =
+      minX +
+      (maxX - minX) *
+      (i / samples);
+
+    const y =
+      normalPDF(
+        x,
+        data.mu,
+        data.sigma
+      );
+
+    const px =
+      mapX(x);
+
+    const py =
+      mapY(y);
+
+    if (i === 0) {
+
+      ctx.moveTo(
+        px,
+        py
+      );
+
+    }
+    else {
+
+      ctx.lineTo(
+        px,
+        py
+      );
+
+    }
+
+  }
+
+
+  ctx.strokeStyle =
+    "#2563eb";
+
+  ctx.lineWidth = 3;
+
+  ctx.stroke();
+
+
+  /*
+    Draw X-axis.
+  */
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    margin.left,
+    margin.top +
+    graphHeight
+  );
+
+  ctx.lineTo(
+    width - margin.right,
+    margin.top +
+    graphHeight
+  );
+
+  ctx.strokeStyle =
+    "#64748b";
+
+  ctx.lineWidth = 1;
+
+  ctx.stroke();
+
+
+  /*
+    Draw specification limit lines.
+  */
+
+  function drawVerticalLine(
+    x,
+    label,
+    color
+  ) {
+
+    if (
+      x < minX ||
+      x > maxX
+    ) {
+      return;
+    }
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      mapX(x),
+      margin.top
+    );
+
+    ctx.lineTo(
+      mapX(x),
+      margin.top +
+      graphHeight
+    );
+
+    ctx.strokeStyle =
+      color;
+
+    ctx.setLineDash([
+      6,
+      5
+    ]);
+
+    ctx.lineWidth = 2;
+
+    ctx.stroke();
+
+    ctx.setLineDash([]);
+
+
+    ctx.fillStyle =
+      color;
+
+    ctx.font =
+      "bold 12px Segoe UI";
+
+    ctx.textAlign =
+      "center";
+
+    ctx.fillText(
+      label,
+      mapX(x),
+      margin.top + 15
+    );
+
+  }
+
+
+  drawVerticalLine(
+    data.lower,
+    "LSL",
+    "#f97316"
+  );
+
+  drawVerticalLine(
+    data.upper,
+    "USL",
+    "#ef4444"
+  );
+
+
+  /*
+    Draw selected diameter.
+  */
+
+  if (
+    data.x >= minX &&
+    data.x <= maxX
+  ) {
+
+    const selectedY =
+      normalPDF(
+        data.x,
+        data.mu,
+        data.sigma
+      );
+
+    const px =
+      mapX(data.x);
+
+    const py =
+      mapY(selectedY);
+
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      px,
+      py
+    );
+
+    ctx.lineTo(
+      px,
+      margin.top +
+      graphHeight
+    );
+
+    ctx.strokeStyle =
+      "#7c3aed";
+
+    ctx.setLineDash([
+      4,
+      4
+    ]);
+
+    ctx.stroke();
+
+    ctx.setLineDash([]);
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+      px,
+      py,
+      5,
+      0,
+      Math.PI * 2
+    );
+
+    ctx.fillStyle =
+      "#7c3aed";
+
+    ctx.fill();
+
+
+    ctx.fillStyle =
+      "#7c3aed";
+
+    ctx.font =
+      "bold 12px Segoe UI";
+
+    ctx.textAlign =
+      "center";
+
+    ctx.fillText(
+      `x = ${data.x.toFixed(3)} mm`,
+      px,
+      py - 12
+    );
+
+  }
+
+
+  /*
+    Mean line.
+  */
+
+  if (
+    data.mu >= minX &&
+    data.mu <= maxX
+  ) {
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      mapX(data.mu),
+      margin.top
+    );
+
+    ctx.lineTo(
+      mapX(data.mu),
+      margin.top +
+      graphHeight
+    );
+
+    ctx.strokeStyle =
+      "#64748b";
+
+    ctx.setLineDash([
+      3,
+      5
+    ]);
+
+    ctx.stroke();
+
+    ctx.setLineDash([]);
+
+
+    ctx.fillStyle =
+      "#475569";
+
+    ctx.font =
+      "11px Segoe UI";
+
+    ctx.textAlign =
+      "center";
+
+    ctx.fillText(
+      `μ = ${data.mu.toFixed(3)} mm`,
+      mapX(data.mu),
+      height - 30
+    );
+
+  }
+
+
+  /*
+    X-axis labels.
+  */
+
+  const tickCount = 7;
+
+  ctx.fillStyle =
+    "#64748b";
+
+  ctx.font =
+    "11px Segoe UI";
+
+  ctx.textAlign =
+    "center";
+
+
+  for (
+    let i = 0;
+    i <= tickCount;
+    i++
+  ) {
+
+    const x =
+      minX +
+      (maxX - minX) *
+      (i / tickCount);
+
+    const px =
+      mapX(x);
+
+    const y =
+      margin.top +
+      graphHeight;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+      px,
+      y
+    );
+
+    ctx.lineTo(
+      px,
+      y + 5
+    );
+
+    ctx.strokeStyle =
+      "#64748b";
+
+    ctx.stroke();
+
+    ctx.fillText(
+      x.toFixed(3),
+      px,
+      y + 20
+    );
+
+  }
+
+
+  /*
+    Y-axis label.
+  */
+
+  ctx.save();
+
+  ctx.translate(
+    16,
+    height / 2
+  );
+
+  ctx.rotate(-Math.PI / 2);
+
+  ctx.fillStyle =
+    "#64748b";
+
+  ctx.font =
+    "12px Segoe UI";
+
+  ctx.textAlign =
+    "center";
+
+  ctx.fillText(
+    "Probability Density",
+    0,
+    0
+  );
+
+  ctx.restore();
+
+
+  /*
+    X-axis label.
+  */
+
+  ctx.fillStyle =
+    "#64748b";
+
+  ctx.font =
+    "12px Segoe UI";
+
+  ctx.textAlign =
+    "center";
+
+  ctx.fillText(
+    "Shaft Diameter (mm)",
+    width / 2,
+    height - 7
+  );
+
+}
+
+
+/* ==========================================================
+   INPUT EVENT LISTENERS
+========================================================== */
+
+const inputIds = [
+  "mean",
+  "sigma",
+  "lower",
+  "upper",
+  "selectedX"
+];
+
+
+inputIds.forEach(id => {
+
+  document
+    .getElementById(id)
+    .addEventListener(
+      "input",
+      updateNormalDistribution
+    );
+
+});
+
+
+/*
+  Redraw when browser
+  window size changes.
+*/
+
+window.addEventListener(
+  "resize",
+  updateNormalDistribution
+);
+
+
+/*
+  Initial calculation.
+*/
+
+window.addEventListener(
+  "load",
+  updateNormalDistribution
+);
+
+</script>
+
+</body>
+</html>

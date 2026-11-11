@@ -1,0 +1,2122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Continuous Probability Distributions</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      color: #1e293b;
+      line-height: 1.6;
+    }
+
+    nav {
+      background: #0f172a;
+      color: white;
+      padding: 16px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    nav h2 {
+      font-size: 20px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 20px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    nav a:hover {
+      color: #38bdf8;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 30px 20px;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0f172a, #1e40af);
+      color: white;
+      padding: 50px 30px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+    }
+
+    .hero h1 {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    .hero p {
+      max-width: 800px;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 14px;
+      padding: 25px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      border: 1px solid #e2e8f0;
+    }
+
+    .card h3 {
+      color: #1d4ed8;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      margin-bottom: 15px;
+    }
+
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 11px 18px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .module-header {
+      margin-bottom: 25px;
+    }
+
+    .module-header h1 {
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+
+    .module-header p {
+      color: #475569;
+    }
+
+    .assumption {
+      background: #fff7ed;
+      border-left: 5px solid #f97316;
+      padding: 18px;
+      margin-bottom: 25px;
+      border-radius: 8px;
+    }
+
+    .assumption strong {
+      color: #c2410c;
+    }
+
+    .section {
+      background: white;
+      padding: 25px;
+      margin-bottom: 25px;
+      border-radius: 14px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+
+    .section h2 {
+      margin-bottom: 18px;
+      color: #0f172a;
+    }
+
+    .problem {
+      background: #eff6ff;
+      border-left: 5px solid #2563eb;
+      padding: 18px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-top: 15px;
+    }
+
+    .input-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .input-group input {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+      font-size: 15px;
+    }
+
+    .input-group small {
+      color: #64748b;
+      display: block;
+      margin-top: 4px;
+    }
+
+    .error {
+      color: #dc2626;
+      font-weight: bold;
+      margin-top: 15px;
+      display: none;
+    }
+
+    .formula {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-family: "Courier New", monospace;
+      overflow-x: auto;
+    }
+
+    .results {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .result-card {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 18px;
+    }
+
+    .result-card h4 {
+      color: #334155;
+      margin-bottom: 7px;
+    }
+
+    .result-value {
+      font-size: 22px;
+      font-weight: bold;
+      color: #2563eb;
+    }
+
+    .unit {
+      font-size: 13px;
+      color: #64748b;
+      margin-left: 4px;
+    }
+
+    .chart-container {
+      width: 100%;
+      height: 400px;
+      position: relative;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      background: white;
+    }
+
+    .interpretation {
+      background: #ecfdf5;
+      border-left: 5px solid #10b981;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .memoryless {
+      background: #f5f3ff;
+      border-left: 5px solid #7c3aed;
+      padding: 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+
+    .memoryless h3 {
+      color: #6d28d9;
+      margin-bottom: 10px;
+    }
+
+    .coming {
+      text-align: center;
+      padding: 60px 20px;
+      color: #64748b;
+    }
+
+    footer {
+      background: #0f172a;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 700px) {
+      nav {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .hero h1 {
+        font-size: 25px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- NAVIGATION -->
+<nav>
+  <h2>Probability Applications</h2>
+
+  <ul>
+    <li><a onclick="showPage('home')">Home</a></li>
+    <li><a onclick="showPage('normal')">Normal</a></li>
+    <li><a onclick="showPage('exponential')">Exponential</a></li>
+    <li><a onclick="showPage('clt')">CLT</a></li>
+  </ul>
+</nav>
+
+
+<!-- HOME PAGE -->
+<div id="home" class="page active">
+  <div class="container">
+
+    <div class="hero">
+      <h1>Continuous Probability Distributions</h1>
+
+      <p>
+        Industry Applications for Undergraduate AIML Students
+      </p>
+
+      <br>
+
+      <p>
+        Learn how continuous probability distributions can be used
+        to model real-world engineering and technology problems.
+      </p>
+    </div>
+
+    <div class="card-grid">
+
+      <div class="card">
+        <h3>Normal Distribution</h3>
+
+        <p>
+          Manufacturing Quality Control
+        </p>
+
+        <p>
+          Study shaft diameter variation and determine the probability
+          of products meeting specification limits.
+        </p>
+
+        <button onclick="showPage('normal')">
+          Open Module
+        </button>
+      </div>
+
+
+      <div class="card">
+        <h3>Exponential Distribution</h3>
+
+        <p>
+          Cloud Request Inter-arrival Time
+        </p>
+
+        <p>
+          Model the time between incoming requests under a
+          constant-rate Poisson arrival process.
+        </p>
+
+        <button onclick="showPage('exponential')">
+          Open Module
+        </button>
+      </div>
+
+
+      <div class="card">
+        <h3>Central Limit Theorem</h3>
+
+        <p>
+          Warehouse Processing Time
+        </p>
+
+        <p>
+          Understand how sample averages behave as sample size increases.
+        </p>
+
+        <button onclick="showPage('clt')">
+          Open Module
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- NORMAL DISTRIBUTION -->
+<div id="normal" class="page">
+
+  <div class="container">
+
+    <div class="module-header">
+      <h1>Normal Distribution — Manufacturing Quality Control</h1>
+
+      <p>
+        Analyze shaft diameter measurements using the Normal Distribution.
+      </p>
+    </div>
+
+    <div class="section">
+
+      <div class="problem">
+
+        <h3>Industry Problem</h3>
+
+        <p>
+          A manufacturing process produces shafts with a target diameter
+          of 10 mm. We assume the diameter follows a Normal Distribution.
+        </p>
+
+        <br>
+
+        <p>
+          Determine the probability that a randomly selected shaft
+          falls within the acceptable specification limits.
+        </p>
+
+      </div>
+
+
+      <h2>Input Parameters</h2>
+
+      <div class="input-grid">
+
+        <div class="input-group">
+          <label>Mean μ (mm)</label>
+
+          <input
+            type="number"
+            id="mu"
+            value="10"
+            step="0.01"
+            oninput="calculateNormal()"
+          >
+        </div>
+
+
+        <div class="input-group">
+          <label>Standard Deviation σ (mm)</label>
+
+          <input
+            type="number"
+            id="sigma"
+            value="0.05"
+            step="0.001"
+            oninput="calculateNormal()"
+          >
+        </div>
+
+
+        <div class="input-group">
+          <label>Lower Specification Limit</label>
+
+          <input
+            type="number"
+            id="lower"
+            value="9.90"
+            step="0.01"
+            oninput="calculateNormal()"
+          >
+        </div>
+
+
+        <div class="input-group">
+          <label>Upper Specification Limit</label>
+
+          <input
+            type="number"
+            id="upper"
+            value="10.10"
+            step="0.01"
+            oninput="calculateNormal()"
+          >
+        </div>
+
+
+        <div class="input-group">
+          <label>Selected Diameter x (mm)</label>
+
+          <input
+            type="number"
+            id="xValue"
+            value="10"
+            step="0.01"
+            oninput="calculateNormal()"
+          >
+        </div>
+
+      </div>
+
+      <div id="normalError" class="error"></div>
+
+    </div>
+
+
+    <div class="section">
+
+      <h2>Mathematical Formula</h2>
+
+      <div class="formula">
+        f(x) = [1 / (σ√(2π))] × exp[-(x − μ)² / (2σ²)]
+      </div>
+
+      <div class="formula">
+        P(a ≤ X ≤ b) = Φ((b − μ)/σ) − Φ((a − μ)/σ)
+      </div>
+
+    </div>
+
+
+    <div class="section">
+
+      <h2>Results</h2>
+
+      <div class="results">
+
+        <div class="result-card">
+          <h4>Density at Selected Diameter</h4>
+
+          <div class="result-value" id="densityResult">
+            0
+          </div>
+
+          <span class="unit">1/mm</span>
+        </div>
+
+
+        <div class="result-card">
+          <h4>Within Specification</h4>
+
+          <div class="result-value" id="withinResult">
+            0
+          </div>
+
+          <span class="unit">%</span>
+        </div>
+
+
+        <div class="result-card">
+          <h4>Below Lower Limit</h4>
+
+          <div class="result-value" id="belowResult">
+            0
+          </div>
+
+          <span class="unit">%</span>
+        </div>
+
+
+        <div class="result-card">
+          <h4>Above Upper Limit</h4>
+
+          <div class="result-value" id="aboveResult">
+            0
+          </div>
+
+          <span class="unit">%</span>
+        </div>
+
+
+        <div class="result-card">
+          <h4>Expected Defective</h4>
+
+          <div class="result-value" id="defectiveResult">
+            0
+          </div>
+
+          <span class="unit">%</span>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="section">
+
+      <h2>Normal Distribution Curve</h2>
+
+      <div class="chart-container">
+        <canvas id="normalCanvas"></canvas>
+      </div>
+
+    </div>
+
+
+    <div class="interpretation">
+
+      <h3>Interpretation</h3>
+
+      <p id="normalInterpretation">
+        The interpretation will appear here.
+      </p>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- EXPONENTIAL DISTRIBUTION -->
+<div id="exponential" class="page">
+
+  <div class="container">
+
+    <div class="module-header">
+
+      <h1>
+        Exponential Distribution — Cloud Request Inter-arrival Time
+      </h1>
+
+      <p>
+        Model the time between consecutive incoming requests
+        using an Exponential Distribution.
+      </p>
+
+    </div>
+
+
+    <!-- ASSUMPTION -->
+    <div class="assumption">
+
+      <strong>Model Assumption:</strong>
+
+      <p>
+        This model assumes that cloud requests arrive according to
+        a <strong>constant-rate Poisson arrival process</strong>.
+        Therefore, the time between consecutive requests is modeled
+        using an Exponential Distribution.
+      </p>
+
+      <p>
+        <strong>Important:</strong>
+        Inter-arrival time is the time between arrivals.
+        It is not the same as server response time or processing time.
+      </p>
+
+    </div>
+
+
+    <!-- PROBLEM -->
+    <div class="section">
+
+      <div class="problem">
+
+        <h3>Industry Problem</h3>
+
+        <p>
+          Suppose a cloud application receives requests at an average
+          rate of 12 requests per minute.
+        </p>
+
+        <p>
+          We want to study how long we wait between consecutive
+          incoming requests.
+        </p>
+
+      </div>
+
+
+      <h2>Input Parameters</h2>
+
+      <div class="input-grid">
+
+        <div class="input-group">
+
+          <label>
+            Arrival Rate λ
+            <span class="unit">requests/minute</span>
+          </label>
+
+          <input
+            type="number"
+            id="lambda"
+            value="12"
+            min="0.0001"
+            step="0.1"
+            oninput="calculateExponential()"
+          >
+
+          <small>
+            Average number of requests arriving per minute.
+          </small>
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Time Threshold t₁
+            <span class="unit">seconds</span>
+          </label>
+
+          <input
+            type="number"
+            id="t1"
+            value="3"
+            min="0"
+            step="0.1"
+            oninput="calculateExponential()"
+          >
+
+          <small>
+            Used for P(T ≤ t₁), P(T &gt; t₁), and conditional probability.
+          </small>
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Time Threshold t₂
+            <span class="unit">seconds</span>
+          </label>
+
+          <input
+            type="number"
+            id="t2"
+            value="5"
+            min="0"
+            step="0.1"
+            oninput="calculateExponential()"
+          >
+
+          <small>
+            Must satisfy t₂ ≥ t₁.
+          </small>
+
+        </div>
+
+      </div>
+
+      <div id="exponentialError" class="error"></div>
+
+    </div>
+
+
+
+    <!-- FORMULAS -->
+    <div class="section">
+
+      <h2>Exponential Distribution Formula</h2>
+
+      <p>
+        If T represents the inter-arrival time:
+      </p>
+
+      <div class="formula">
+        f(t) = λe<sup>−λt</sup>, &nbsp; t ≥ 0
+      </div>
+
+      <div class="formula">
+        Mean = E(T) = 1 / λ
+      </div>
+
+      <div class="formula">
+        Variance = Var(T) = 1 / λ²
+      </div>
+
+      <div class="formula">
+        P(T ≤ t) = 1 − e<sup>−λt</sup>
+      </div>
+
+      <div class="formula">
+        P(T &gt; t) = e<sup>−λt</sup>
+      </div>
+
+      <div class="formula">
+        P(T &gt; t₂ | T &gt; t₁)
+        =
+        e<sup>−λ(t₂ − t₁)</sup>
+        &nbsp; for t₂ ≥ t₁
+      </div>
+
+    </div>
+
+
+
+    <!-- RESULTS -->
+    <div class="section">
+
+      <h2>Calculated Results</h2>
+
+      <div class="results">
+
+
+        <div class="result-card">
+
+          <h4>Mean Inter-arrival Time</h4>
+
+          <div class="result-value" id="expMean">
+            0
+          </div>
+
+          <span class="unit">
+            seconds
+          </span>
+
+          <p id="expMeanMinutes">
+            0 minutes
+          </p>
+
+        </div>
+
+
+
+        <div class="result-card">
+
+          <h4>Variance</h4>
+
+          <div class="result-value" id="expVariance">
+            0
+          </div>
+
+          <span class="unit">
+            seconds²
+          </span>
+
+        </div>
+
+
+
+        <div class="result-card">
+
+          <h4>P(T ≤ t₁)</h4>
+
+          <div class="result-value" id="expLess">
+            0
+          </div>
+
+          <span class="unit">
+            %
+          </span>
+
+        </div>
+
+
+
+        <div class="result-card">
+
+          <h4>P(T &gt; t₁)</h4>
+
+          <div class="result-value" id="expGreater">
+            0
+          </div>
+
+          <span class="unit">
+            %
+          </span>
+
+        </div>
+
+
+
+        <div class="result-card">
+
+          <h4>
+            P(T &gt; t₂ | T &gt; t₁)
+          </h4>
+
+          <div class="result-value" id="expConditional">
+            0
+          </div>
+
+          <span class="unit">
+            %
+          </span>
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- CURVE -->
+    <div class="section">
+
+      <h2>Exponential Probability Density Curve</h2>
+
+      <p>
+        The shaded region represents
+        <strong>P(T ≤ t₁)</strong>.
+      </p>
+
+      <div class="chart-container">
+
+        <canvas id="exponentialCanvas"></canvas>
+
+      </div>
+
+    </div>
+
+
+
+    <!-- MEMORYLESS PROPERTY -->
+    <div class="memoryless">
+
+      <h3>Memoryless Property</h3>
+
+      <p>
+        The Exponential Distribution is called
+        <strong>memoryless</strong> because the probability of waiting
+        an additional amount of time does not depend on how long
+        you have already waited.
+      </p>
+
+      <br>
+
+      <p>
+        For example, if no request has arrived for 3 seconds,
+        the probability of waiting another 2 seconds is the same
+        as it would have been at the beginning.
+      </p>
+
+      <br>
+
+      <div class="formula">
+
+        P(T &gt; t₂ | T &gt; t₁)
+        =
+        P(T &gt; t₂ − t₁)
+
+      </div>
+
+    </div>
+
+
+
+    <!-- INTERPRETATION -->
+    <div class="interpretation">
+
+      <h3>Interpretation</h3>
+
+      <p id="exponentialInterpretation">
+        The interpretation will appear here.
+      </p>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- CLT PAGE -->
+<div id="clt" class="page">
+
+  <div class="container">
+
+    <div class="module-header">
+
+      <h1>
+        Central Limit Theorem — Warehouse Processing Time
+      </h1>
+
+      <p>
+        Understand how sample averages behave as sample size increases.
+      </p>
+
+    </div>
+
+    <div class="section">
+
+      <div class="coming">
+
+        <h2>Coming Next</h2>
+
+        <p>
+          The Central Limit Theorem interactive module
+          will be implemented in the next step.
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+<footer>
+
+  <p>
+    Continuous Probability Distributions — Industry Applications
+  </p>
+
+  <p>
+    Undergraduate AIML Learning Module
+  </p>
+
+</footer>
+
+
+
+<script>
+
+/* ==========================================================
+   PAGE NAVIGATION
+========================================================== */
+
+function showPage(pageId) {
+
+  const pages = document.querySelectorAll(".page");
+
+  pages.forEach(page => {
+    page.classList.remove("active");
+  });
+
+  document.getElementById(pageId).classList.add("active");
+
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+
+  if (pageId === "normal") {
+    calculateNormal();
+  }
+
+  if (pageId === "exponential") {
+    calculateExponential();
+  }
+}
+
+
+
+/* ==========================================================
+   NORMAL DISTRIBUTION
+========================================================== */
+
+function normalPDF(x, mu, sigma) {
+
+  const coefficient =
+    1 / (sigma * Math.sqrt(2 * Math.PI));
+
+  const exponent =
+    -Math.pow(x - mu, 2) / (2 * Math.pow(sigma, 2));
+
+  return coefficient * Math.exp(exponent);
+}
+
+
+
+/*
+   Approximation of the standard normal CDF
+*/
+
+function normalCDF(z) {
+
+  const sign = z < 0 ? -1 : 1;
+
+  z = Math.abs(z);
+
+  const t =
+    1 / (1 + 0.2316419 * z);
+
+  const d =
+    0.3989423 * Math.exp(-z * z / 2);
+
+  const probability =
+    1 -
+    d *
+    (
+      0.3193815 * t
+      - 0.3565638 * Math.pow(t, 2)
+      + 1.781478 * Math.pow(t, 3)
+      - 1.821256 * Math.pow(t, 4)
+      + 1.330274 * Math.pow(t, 5)
+    );
+
+  return sign === 1 ? probability : 1 - probability;
+}
+
+
+
+function calculateNormal() {
+
+  const mu =
+    parseFloat(document.getElementById("mu").value);
+
+  const sigma =
+    parseFloat(document.getElementById("sigma").value);
+
+  const lower =
+    parseFloat(document.getElementById("lower").value);
+
+  const upper =
+    parseFloat(document.getElementById("upper").value);
+
+  const x =
+    parseFloat(document.getElementById("xValue").value);
+
+  const error =
+    document.getElementById("normalError");
+
+  error.style.display = "none";
+
+
+
+  if (
+    !Number.isFinite(mu) ||
+    !Number.isFinite(sigma) ||
+    !Number.isFinite(lower) ||
+    !Number.isFinite(upper) ||
+    !Number.isFinite(x)
+  ) {
+
+    error.textContent =
+      "Please enter valid numerical values.";
+
+    error.style.display = "block";
+
+    return;
+  }
+
+
+
+  if (sigma <= 0) {
+
+    error.textContent =
+      "Standard deviation σ must be greater than 0.";
+
+    error.style.display = "block";
+
+    return;
+  }
+
+
+
+  if (lower >= upper) {
+
+    error.textContent =
+      "Lower specification limit must be less than the upper specification limit.";
+
+    error.style.display = "block";
+
+    return;
+  }
+
+
+
+  const density =
+    normalPDF(x, mu, sigma);
+
+
+
+  const zLower =
+    (lower - mu) / sigma;
+
+  const zUpper =
+    (upper - mu) / sigma;
+
+
+
+  const within =
+    normalCDF(zUpper) -
+    normalCDF(zLower);
+
+
+
+  const below =
+    normalCDF(zLower);
+
+
+
+  const above =
+    1 - normalCDF(zUpper);
+
+
+
+  const defective =
+    below + above;
+
+
+
+  document.getElementById("densityResult").textContent =
+    density.toFixed(5);
+
+  document.getElementById("withinResult").textContent =
+    (within * 100).toFixed(3);
+
+  document.getElementById("belowResult").textContent =
+    (below * 100).toFixed(3);
+
+  document.getElementById("aboveResult").textContent =
+    (above * 100).toFixed(3);
+
+  document.getElementById("defectiveResult").textContent =
+    (defective * 100).toFixed(3);
+
+
+
+  document.getElementById("normalInterpretation").textContent =
+    `${(within * 100).toFixed(2)}% of shafts are expected to fall within `
+    + `the acceptable range of ${lower.toFixed(2)} mm to ${upper.toFixed(2)} mm. `
+    + `Approximately ${(defective * 100).toFixed(2)}% are expected to be defective `
+    + `because they fall outside the specification limits.`;
+
+
+
+  drawNormalCurve(
+    mu,
+    sigma,
+    lower,
+    upper,
+    x
+  );
+}
+
+
+
+/* ==========================================================
+   DRAW NORMAL CURVE
+========================================================== */
+
+function drawNormalCurve(
+  mu,
+  sigma,
+  lower,
+  upper,
+  selectedX
+) {
+
+  const canvas =
+    document.getElementById("normalCanvas");
+
+  const ctx =
+    canvas.getContext("2d");
+
+  const width =
+    canvas.clientWidth;
+
+  const height =
+    canvas.clientHeight;
+
+  canvas.width = width;
+  canvas.height = height;
+
+
+
+  const padding = 50;
+
+  const chartWidth =
+    width - 2 * padding;
+
+  const chartHeight =
+    height - 2 * padding;
+
+
+
+  const minX =
+    mu - 4 * sigma;
+
+  const maxX =
+    mu + 4 * sigma;
+
+
+
+  let maxY = 0;
+
+  for (let i = 0; i <= 300; i++) {
+
+    const x =
+      minX +
+      (maxX - minX) * i / 300;
+
+    maxY =
+      Math.max(
+        maxY,
+        normalPDF(x, mu, sigma)
+      );
+  }
+
+
+
+  function mapX(x) {
+
+    return (
+      padding +
+      (x - minX) /
+      (maxX - minX) *
+      chartWidth
+    );
+  }
+
+
+
+  function mapY(y) {
+
+    return (
+      height -
+      padding -
+      (y / maxY) *
+      chartHeight
+    );
+  }
+
+
+
+  ctx.clearRect(0, 0, width, height);
+
+
+
+  /* Axes */
+
+  ctx.beginPath();
+
+  ctx.moveTo(padding, height - padding);
+
+  ctx.lineTo(width - padding, height - padding);
+
+  ctx.stroke();
+
+
+
+  ctx.beginPath();
+
+  ctx.moveTo(padding, padding);
+
+  ctx.lineTo(padding, height - padding);
+
+  ctx.stroke();
+
+
+
+  /* Shaded acceptable region */
+
+  ctx.beginPath();
+
+  let started = false;
+
+  for (let i = 0; i <= 300; i++) {
+
+    const x =
+      minX +
+      (maxX - minX) * i / 300;
+
+    if (x >= lower && x <= upper) {
+
+      const px = mapX(x);
+      const py = mapY(normalPDF(x, mu, sigma));
+
+      if (!started) {
+
+        ctx.moveTo(px, height - padding);
+        ctx.lineTo(px, py);
+
+        started = true;
+
+      } else {
+
+        ctx.lineTo(px, py);
+      }
+    }
+  }
+
+
+
+  if (started) {
+
+    ctx.lineTo(mapX(upper), height - padding);
+    ctx.closePath();
+
+    ctx.fillStyle =
+      "rgba(34, 197, 94, 0.25)";
+
+    ctx.fill();
+  }
+
+
+
+  /* Curve */
+
+  ctx.beginPath();
+
+  for (let i = 0; i <= 400; i++) {
+
+    const x =
+      minX +
+      (maxX - minX) * i / 400;
+
+    const px =
+      mapX(x);
+
+    const py =
+      mapY(
+        normalPDF(x, mu, sigma)
+      );
+
+    if (i === 0) {
+
+      ctx.moveTo(px, py);
+
+    } else {
+
+      ctx.lineTo(px, py);
+    }
+  }
+
+  ctx.strokeStyle = "#2563eb";
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+
+
+  /* Mean line */
+
+  drawVerticalLine(
+    ctx,
+    mapX(mu),
+    padding,
+    height - padding,
+    "#64748b",
+    "Mean μ"
+  );
+
+
+
+  /* Lower limit */
+
+  drawVerticalLine(
+    ctx,
+    mapX(lower),
+    padding,
+    height - padding,
+    "#dc2626",
+    "LSL"
+  );
+
+
+
+  /* Upper limit */
+
+  drawVerticalLine(
+    ctx,
+    mapX(upper),
+    padding,
+    height - padding,
+    "#dc2626",
+    "USL"
+  );
+
+
+
+  /* Selected x */
+
+  drawVerticalLine(
+    ctx,
+    mapX(selectedX),
+    padding,
+    height - padding,
+    "#7c3aed",
+    "x"
+  );
+}
+
+
+
+function drawVerticalLine(
+  ctx,
+  x,
+  top,
+  bottom,
+  color,
+  label
+) {
+
+  ctx.beginPath();
+
+  ctx.moveTo(x, top);
+
+  ctx.lineTo(x, bottom);
+
+  ctx.strokeStyle = color;
+
+  ctx.setLineDash([5, 5]);
+
+  ctx.stroke();
+
+  ctx.setLineDash([]);
+
+  ctx.fillStyle = color;
+
+  ctx.font = "12px Arial";
+
+  ctx.fillText(
+    label,
+    x + 5,
+    top + 15
+  );
+}
+
+
+
+/* ==========================================================
+   EXPONENTIAL DISTRIBUTION
+========================================================== */
+
+function calculateExponential() {
+
+  const lambda =
+    parseFloat(
+      document.getElementById("lambda").value
+    );
+
+  const t1Seconds =
+    parseFloat(
+      document.getElementById("t1").value
+    );
+
+  const t2Seconds =
+    parseFloat(
+      document.getElementById("t2").value
+    );
+
+  const error =
+    document.getElementById("exponentialError");
+
+
+
+  error.style.display = "none";
+
+
+
+  /*
+    Validation
+  */
+
+  if (
+    !Number.isFinite(lambda) ||
+    !Number.isFinite(t1Seconds) ||
+    !Number.isFinite(t2Seconds)
+  ) {
+
+    error.textContent =
+      "Please enter valid numerical values.";
+
+    error.style.display =
+      "block";
+
+    return;
+  }
+
+
+
+  if (lambda <= 0) {
+
+    error.textContent =
+      "Arrival rate λ must be greater than 0.";
+
+    error.style.display =
+      "block";
+
+    return;
+  }
+
+
+
+  if (t1Seconds < 0) {
+
+    error.textContent =
+      "Time threshold t₁ cannot be negative.";
+
+    error.style.display =
+      "block";
+
+    return;
+  }
+
+
+
+  if (t2Seconds < 0) {
+
+    error.textContent =
+      "Time threshold t₂ cannot be negative.";
+
+    error.style.display =
+      "block";
+
+    return;
+  }
+
+
+
+  if (t2Seconds < t1Seconds) {
+
+    error.textContent =
+      "t₂ must be greater than or equal to t₁.";
+
+    error.style.display =
+      "block";
+
+    return;
+  }
+
+
+
+  /*
+    Convert λ from requests/minute
+    to requests/second.
+  */
+
+  const lambdaPerSecond =
+    lambda / 60;
+
+
+
+  /*
+    Convert seconds to minutes
+    when needed.
+  */
+
+  const t1Minutes =
+    t1Seconds / 60;
+
+  const t2Minutes =
+    t2Seconds / 60;
+
+
+
+  /*
+    Mean
+
+    1 / λ
+
+    Since λ is requests/minute,
+    the mean initially comes out in minutes.
+  */
+
+  const meanMinutes =
+    1 / lambda;
+
+  const meanSeconds =
+    meanMinutes * 60;
+
+
+
+  /*
+    Variance
+
+    1 / λ²
+
+    With λ in requests/second,
+    variance is in seconds².
+  */
+
+  const varianceSecondsSquared =
+    1 /
+    Math.pow(lambdaPerSecond, 2);
+
+
+
+  /*
+    P(T <= t1)
+  */
+
+  const pLess =
+    1 -
+    Math.exp(
+      -lambdaPerSecond * t1Seconds
+    );
+
+
+
+  /*
+    P(T > t1)
+  */
+
+  const pGreater =
+    Math.exp(
+      -lambdaPerSecond * t1Seconds
+    );
+
+
+
+  /*
+    Memoryless property
+
+    P(T > t2 | T > t1)
+    =
+    exp[-λ(t2-t1)]
+  */
+
+  const pConditional =
+    Math.exp(
+      -lambdaPerSecond *
+      (t2Seconds - t1Seconds)
+    );
+
+
+
+  /*
+    Display results
+  */
+
+  document.getElementById("expMean").textContent =
+    meanSeconds.toFixed(3);
+
+
+
+  document.getElementById("expMeanMinutes").textContent =
+    `${meanMinutes.toFixed(5)} minutes`;
+
+
+
+  document.getElementById("expVariance").textContent =
+    varianceSecondsSquared.toFixed(3);
+
+
+
+  document.getElementById("expLess").textContent =
+    (pLess * 100).toFixed(3);
+
+
+
+  document.getElementById("expGreater").textContent =
+    (pGreater * 100).toFixed(3);
+
+
+
+  document.getElementById("expConditional").textContent =
+    (pConditional * 100).toFixed(3);
+
+
+
+  /*
+    Interpretation
+  */
+
+  document.getElementById(
+    "exponentialInterpretation"
+  ).textContent =
+
+    `At an arrival rate of ${lambda.toFixed(2)} requests/minute, `
+    + `the average inter-arrival time is approximately `
+    + `${meanSeconds.toFixed(2)} seconds. `
+
+    + `The probability that the next request arrives within `
+    + `${t1Seconds.toFixed(2)} seconds is `
+    + `${(pLess * 100).toFixed(2)}%. `
+
+    + `The probability of waiting more than `
+    + `${t1Seconds.toFixed(2)} seconds is `
+    + `${(pGreater * 100).toFixed(2)}%. `
+
+    + `If ${t1Seconds.toFixed(2)} seconds have already passed `
+    + `without a request, the probability of waiting beyond `
+    + `${t2Seconds.toFixed(2)} seconds is `
+    + `${(pConditional * 100).toFixed(2)}% from that point.`;
+
+
+
+  drawExponentialCurve(
+    lambdaPerSecond,
+    t1Seconds,
+    t2Seconds
+  );
+}
+
+
+
+/* ==========================================================
+   DRAW EXPONENTIAL CURVE
+========================================================== */
+
+function drawExponentialCurve(
+  lambda,
+  t1,
+  t2
+) {
+
+  const canvas =
+    document.getElementById(
+      "exponentialCanvas"
+    );
+
+  const ctx =
+    canvas.getContext("2d");
+
+
+
+  const width =
+    canvas.clientWidth;
+
+  const height =
+    canvas.clientHeight;
+
+
+
+  canvas.width = width;
+  canvas.height = height;
+
+
+
+  const padding = 50;
+
+  const chartWidth =
+    width - 2 * padding;
+
+  const chartHeight =
+    height - 2 * padding;
+
+
+
+  /*
+    Select a useful x-axis range.
+
+    The curve decreases quickly,
+    so we show approximately
+    5 mean inter-arrival times,
+    while also ensuring t2 is visible.
+  */
+
+  const mean =
+    1 / lambda;
+
+
+
+  const maxTime =
+    Math.max(
+      5 * mean,
+      t2 * 1.2,
+      1
+    );
+
+
+
+  const minTime = 0;
+
+
+
+  const maxY = lambda;
+
+
+
+  function mapX(x) {
+
+    return (
+      padding +
+      (x - minTime) /
+      (maxTime - minTime) *
+      chartWidth
+    );
+  }
+
+
+
+  function mapY(y) {
+
+    return (
+      height -
+      padding -
+      (y / maxY) *
+      chartHeight
+    );
+  }
+
+
+
+  ctx.clearRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+
+  /*
+    Axes
+  */
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    padding,
+    height - padding
+  );
+
+  ctx.lineTo(
+    width - padding,
+    height - padding
+  );
+
+  ctx.strokeStyle =
+    "#334155";
+
+  ctx.stroke();
+
+
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    padding,
+    padding
+  );
+
+  ctx.lineTo(
+    padding,
+    height - padding
+  );
+
+  ctx.stroke();
+
+
+
+  /*
+    Shade P(T <= t1)
+  */
+
+  ctx.beginPath();
+
+  ctx.moveTo(
+    mapX(0),
+    height - padding
+  );
+
+  for (let i = 0; i <= 300; i++) {
+
+    const x =
+      t1 *
+      i / 300;
+
+    const y =
+      lambda *
+      Math.exp(-lambda * x);
+
+    ctx.lineTo(
+      mapX(x),
+      mapY(y)
+    );
+  }
+
+
+
+  ctx.lineTo(
+    mapX(t1),
+    height - padding
+  );
+
+  ctx.closePath();
+
+  ctx.fillStyle =
+    "rgba(37, 99, 235, 0.25)";
+
+  ctx.fill();
+
+
+
+  /*
+    Exponential curve
+  */
+
+  ctx.beginPath();
+
+  for (let i = 0; i <= 500; i++) {
+
+    const x =
+      maxTime *
+      i / 500;
+
+    const y =
+      lambda *
+      Math.exp(-lambda * x);
+
+    const px =
+      mapX(x);
+
+    const py =
+      mapY(y);
+
+    if (i === 0) {
+
+      ctx.moveTo(px, py);
+
+    } else {
+
+      ctx.lineTo(px, py);
+    }
+  }
+
+
+
+  ctx.strokeStyle =
+    "#2563eb";
+
+  ctx.lineWidth = 3;
+
+  ctx.stroke();
+
+
+
+  /*
+    t1 vertical line
+  */
+
+  drawVerticalLine(
+    ctx,
+    mapX(t1),
+    padding,
+    height - padding,
+    "#dc2626",
+    "t₁"
+  );
+
+
+
+  /*
+    t2 vertical line
+  */
+
+  drawVerticalLine(
+    ctx,
+    mapX(t2),
+    padding,
+    height - padding,
+    "#7c3aed",
+    "t₂"
+  );
+
+
+
+  /*
+    Mean vertical line
+  */
+
+  drawVerticalLine(
+    ctx,
+    mapX(mean),
+    padding,
+    height - padding,
+    "#64748b",
+    "Mean"
+  );
+
+
+
+  /*
+    Axis labels
+  */
+
+  ctx.fillStyle =
+    "#334155";
+
+  ctx.font =
+    "12px Arial";
+
+  ctx.fillText(
+    "Time (seconds)",
+    width - 125,
+    height - 15
+  );
+
+  ctx.fillText(
+    "f(t)",
+    15,
+    padding
+  );
+}
+
+
+
+/* ==========================================================
+   INITIAL CALCULATION
+========================================================== */
+
+window.addEventListener(
+  "load",
+  function() {
+
+    calculateNormal();
+
+    calculateExponential();
+
+  }
+);
+
+
+
+/*
+  Redraw charts when browser window changes size.
+*/
+
+window.addEventListener(
+  "resize",
+  function() {
+
+    calculateNormal();
+
+    calculateExponential();
+
+  }
+);
+
+</script>
+
+</body>
+</html>

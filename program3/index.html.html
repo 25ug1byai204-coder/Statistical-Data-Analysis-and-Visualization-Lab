@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Continuous Probability Distributions</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #f4f7fb;
+      color: #1e293b;
+      line-height: 1.6;
+    }
+
+    /* ================= NAVBAR ================= */
+
+    nav {
+      background: #0f172a;
+      color: white;
+      padding: 16px 6%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .logo span {
+      color: #38bdf8;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 10px;
+      list-style: none;
+    }
+
+    .nav-links button {
+      background: transparent;
+      border: none;
+      color: #cbd5e1;
+      padding: 10px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+
+    .nav-links button:hover,
+    .nav-links button.active {
+      background: #1e293b;
+      color: white;
+    }
+
+    /* ================= GENERAL ================= */
+
+    main {
+      min-height: calc(100vh - 70px);
+    }
+
+    .page {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+      padding: 45px 0;
+    }
+
+    h1 {
+      font-size: 38px;
+      color: #0f172a;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      color: #0f172a;
+      margin-bottom: 12px;
+    }
+
+    h3 {
+      color: #334155;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #64748b;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .section-title h2 {
+      font-size: 30px;
+    }
+
+    .section-title p {
+      max-width: 700px;
+      margin: auto;
+    }
+
+    /* ================= HOME ================= */
+
+    .hero {
+      min-height: 500px;
+      display: flex;
+      align-items: center;
+      background:
+        linear-gradient(135deg, #0f172a 0%, #172554 55%, #0369a1 100%);
+      color: white;
+    }
+
+    .hero-content {
+      width: 90%;
+      max-width: 1200px;
+      margin: auto;
+      padding: 70px 0;
+    }
+
+    .hero h1 {
+      color: white;
+      max-width: 800px;
+      font-size: clamp(32px, 5vw, 54px);
+      line-height: 1.15;
+    }
+
+    .hero h1 span {
+      color: #38bdf8;
+    }
+
+    .hero p {
+      color: #cbd5e1;
+      max-width: 720px;
+      font-size: 17px;
+      margin: 20px 0 30px;
+    }
+
+    .start-btn {
+      border: none;
+      background: #38bdf8;
+      color: #082f49;
+      font-weight: 700;
+      padding: 13px 22px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .start-btn:hover {
+      background: #7dd3fc;
+    }
+
+    /* ================= MODULE CARDS ================= */
+
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .module-card {
+      background: white;
+      border-radius: 14px;
+      padding: 25px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
+      transition: 0.25s;
+    }
+
+    .module-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+    }
+
+    .icon {
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #e0f2fe;
+      color: #0369a1;
+      border-radius: 12px;
+      font-size: 22px;
+      margin-bottom: 18px;
+    }
+
+    .module-card h3 {
+      color: #0f172a;
+    }
+
+    .module-card p {
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    .module-btn {
+      border: 1px solid #0ea5e9;
+      color: #0369a1;
+      background: white;
+      padding: 9px 14px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .module-btn:hover {
+      background: #e0f2fe;
+    }
+
+    /* ================= MODULE HEADER ================= */
+
+    .module-header {
+      background: #0f172a;
+      color: white;
+      padding: 45px 0;
+    }
+
+    .module-header h1 {
+      color: white;
+      font-size: 34px;
+    }
+
+    .module-header p {
+      color: #cbd5e1;
+      max-width: 800px;
+    }
+
+    /* ================= CONTENT GRID ================= */
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+      margin-bottom: 25px;
+    }
+
+    .card {
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 25px;
+      box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
+    }
+
+    .card.full {
+      grid-column: 1 / -1;
+    }
+
+    /* ================= PROBLEM ================= */
+
+    .problem {
+      border-left: 5px solid #0ea5e9;
+    }
+
+    .problem p {
+      color: #475569;
+    }
+
+    /* ================= FORMULA ================= */
+
+    .formula {
+      background: #f8fafc;
+      border: 1px dashed #94a3b8;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      font-family: "Cambria Math", Georgia, serif;
+      font-size: 20px;
+      color: #0f172a;
+      margin-top: 15px;
+    }
+
+    .formula-note {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 13px;
+      color: #64748b;
+    }
+
+    /* ================= INPUTS ================= */
+
+    .input-group {
+      margin-bottom: 18px;
+    }
+
+    .input-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 7px;
+      color: #334155;
+    }
+
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 7px;
+      outline: none;
+      font-size: 14px;
+    }
+
+    .input-group input:focus,
+    .input-group select:focus {
+      border-color: #0ea5e9;
+    }
+
+    .calculate-btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #0284c7;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .calculate-btn:hover {
+      background: #0369a1;
+    }
+
+    /* ================= VISUALIZATION ================= */
+
+    .visualization {
+      min-height: 300px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      border-radius: 10px;
+      color: #64748b;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .chart-placeholder {
+      width: 100%;
+    }
+
+    .chart-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    /* ================= RESULT ================= */
+
+    .result-box {
+      background: #eff6ff;
+      border-left: 5px solid #2563eb;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    .result-box strong {
+      color: #1e40af;
+    }
+
+    .result-placeholder {
+      color: #64748b;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+
+    /* ================= FOOTER ================= */
+
+    footer {
+      background: #0f172a;
+      color: #94a3b8;
+      text-align: center;
+      padding: 25px;
+      margin-top: 30px;
+      font-size: 13px;
+    }
+
+    /* ================= RESPONSIVE ================= */
+
+    @media (max-width: 900px) {
+      .module-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card.full {
+        grid-column: auto;
+      }
+
+      .nav-links {
+        gap: 3px;
+      }
+
+      .nav-links button {
+        padding: 8px;
+        font-size: 12px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      nav {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .nav-links {
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .hero-content {
+        padding: 50px 0;
+      }
+
+      h1 {
+        font-size: 30px;
+      }
+
+      .module-header h1 {
+        font-size: 27px;
+      }
+
+      .container {
+        width: 92%;
+        padding: 30px 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- ================= NAVIGATION ================= -->
+
+<nav>
+  <div class="logo" onclick="showPage('home')">
+    Probability<span>Lab</span>
+  </div>
+
+  <ul class="nav-links">
+    <li>
+      <button class="nav-btn active" data-page="home"
+              onclick="showPage('home')">
+        Home
+      </button>
+    </li>
+
+    <li>
+      <button class="nav-btn" data-page="normal"
+              onclick="showPage('normal')">
+        Normal Distribution
+      </button>
+    </li>
+
+    <li>
+      <button class="nav-btn" data-page="exponential"
+              onclick="showPage('exponential')">
+        Exponential Distribution
+      </button>
+    </li>
+
+    <li>
+      <button class="nav-btn" data-page="clt"
+              onclick="showPage('clt')">
+        Central Limit Theorem
+      </button>
+    </li>
+  </ul>
+</nav>
+
+
+<main>
+
+<!-- ========================================================= -->
+<!-- HOME PAGE -->
+<!-- ========================================================= -->
+
+<section id="home" class="page active">
+
+  <section class="hero">
+    <div class="hero-content">
+
+      <h1>
+        Continuous Probability Distributions:
+        <span>Industry Applications</span>
+      </h1>
+
+      <p>
+        Learn how probability distributions are used in real-world
+        AIML and industry problems such as manufacturing quality,
+        cloud computing, and warehouse operations.
+      </p>
+
+      <button class="start-btn"
+              onclick="showPage('normal')">
+        Start Learning →
+      </button>
+
+    </div>
+  </section>
+
+
+  <div class="container">
+
+    <div class="section-title">
+      <h2>Explore the Modules</h2>
+
+      <p>
+        Understand important probability concepts through
+        simple industry-based examples and interactive
+        learning activities.
+      </p>
+    </div>
+
+
+    <div class="module-grid">
+
+      <!-- NORMAL -->
+
+      <div class="module-card">
+
+        <div class="icon">📊</div>
+
+        <h3>
+          Normal Distribution
+        </h3>
+
+        <p>
+          Learn how manufacturing companies use the normal
+          distribution to monitor product quality and identify
+          unusual measurements.
+        </p>
+
+        <button class="module-btn"
+                onclick="showPage('normal')">
+          Open Module →
+        </button>
+
+      </div>
+
+
+      <!-- EXPONENTIAL -->
+
+      <div class="module-card">
+
+        <div class="icon">☁️</div>
+
+        <h3>
+          Exponential Distribution
+        </h3>
+
+        <p>
+          Understand how cloud systems can model the time
+          between incoming requests using the exponential
+          distribution.
+        </p>
+
+        <button class="module-btn"
+                onclick="showPage('exponential')">
+          Open Module →
+        </button>
+
+      </div>
+
+
+      <!-- CLT -->
+
+      <div class="module-card">
+
+        <div class="icon">📦</div>
+
+        <h3>
+          Central Limit Theorem
+        </h3>
+
+        <p>
+          Explore how warehouse managers can use sample averages
+          to understand processing time and make better decisions.
+        </p>
+
+        <button class="module-btn"
+                onclick="showPage('clt')">
+          Open Module →
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- NORMAL DISTRIBUTION -->
+<!-- ========================================================= -->
+
+<section id="normal" class="page">
+
+  <div class="module-header">
+    <div class="container">
+
+      <h1>
+        Normal Distribution
+      </h1>
+
+      <p>
+        Manufacturing Quality Control
+      </p>
+
+    </div>
+  </div>
+
+
+  <div class="container">
+
+    <div class="content-grid">
+
+      <!-- PROBLEM -->
+
+      <div class="card full problem">
+
+        <h2>🏭 Industry Problem</h2>
+
+        <p>
+          A manufacturing company produces metal components.
+          The diameter of each component is expected to be close
+          to a target value. Small variations are normal, but
+          very large variations may indicate a quality problem.
+        </p>
+
+        <br>
+
+        <p>
+          The normal distribution can help engineers understand
+          how the component measurements are distributed around
+          the average value.
+        </p>
+
+      </div>
+
+
+      <!-- INPUT PARAMETERS -->
+
+      <div class="card">
+
+        <h2>Input Parameters</h2>
+
+        <div class="input-group">
+
+          <label>
+            Mean (μ)
+          </label>
+
+          <input
+            type="number"
+            id="normalMean"
+            placeholder="Example: 50"
+            value="50"
+          />
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Standard Deviation (σ)
+          </label>
+
+          <input
+            type="number"
+            id="normalStd"
+            placeholder="Example: 2"
+            value="2"
+          />
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Measurement (x)
+          </label>
+
+          <input
+            type="number"
+            id="normalX"
+            placeholder="Example: 53"
+            value="53"
+          />
+
+        </div>
+
+
+        <button class="calculate-btn"
+                onclick="normalCalculationPlaceholder()">
+          Calculate
+        </button>
+
+      </div>
+
+
+      <!-- FORMULA -->
+
+      <div class="card">
+
+        <h2>Mathematical Formula</h2>
+
+        <div class="formula">
+          f(x) =
+          <br>
+          1 / (σ√(2π))
+          × e<sup>−(x−μ)² / 2σ²</sup>
+        </div>
+
+        <p class="formula-note">
+          The formula describes the probability density
+          of a normally distributed variable.
+        </p>
+
+      </div>
+
+
+      <!-- VISUALIZATION -->
+
+      <div class="card full">
+
+        <h2>Dynamic Visualization</h2>
+
+        <div class="visualization">
+
+          <div class="chart-placeholder">
+
+            <div class="chart-icon">
+              📈
+            </div>
+
+            <h3>
+              Normal Distribution Graph
+            </h3>
+
+            <p>
+              Interactive bell-curve visualization
+              will be added in the calculation stage.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- INTERPRETATION -->
+
+      <div class="card full">
+
+        <h2>Interpretation of Results</h2>
+
+        <div class="result-box">
+
+          <strong>
+            Result Interpretation
+          </strong>
+
+          <p class="result-placeholder">
+            After calculation is implemented, this section
+            will explain whether the selected measurement is
+            close to the average or unusually far from it.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- EXPONENTIAL DISTRIBUTION -->
+<!-- ========================================================= -->
+
+<section id="exponential" class="page">
+
+  <div class="module-header">
+    <div class="container">
+
+      <h1>
+        Exponential Distribution
+      </h1>
+
+      <p>
+        Cloud Request Inter-arrival Time
+      </p>
+
+    </div>
+  </div>
+
+
+  <div class="container">
+
+    <div class="content-grid">
+
+      <!-- PROBLEM -->
+
+      <div class="card full problem">
+
+        <h2>☁️ Industry Problem</h2>
+
+        <p>
+          A cloud application receives requests from users.
+          The time between two consecutive requests can vary.
+        </p>
+
+        <br>
+
+        <p>
+          Cloud engineers can use the exponential distribution
+          to model the waiting time between independent requests
+          arriving at a system.
+        </p>
+
+      </div>
+
+
+      <!-- INPUT -->
+
+      <div class="card">
+
+        <h2>Input Parameters</h2>
+
+        <div class="input-group">
+
+          <label>
+            Average Arrival Rate (λ)
+          </label>
+
+          <input
+            type="number"
+            id="expLambda"
+            placeholder="Example: 5"
+            value="5"
+          />
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Waiting Time (t)
+          </label>
+
+          <input
+            type="number"
+            id="expTime"
+            placeholder="Example: 0.5"
+            value="0.5"
+          />
+
+        </div>
+
+
+        <button class="calculate-btn"
+                onclick="exponentialCalculationPlaceholder()">
+          Calculate
+        </button>
+
+      </div>
+
+
+      <!-- FORMULA -->
+
+      <div class="card">
+
+        <h2>Mathematical Formula</h2>
+
+        <div class="formula">
+
+          f(t) = λe<sup>−λt</sup>
+
+          <br><br>
+
+          P(T &gt; t) = e<sup>−λt</sup>
+
+        </div>
+
+        <p class="formula-note">
+          The exponential distribution models waiting time
+          between events.
+        </p>
+
+      </div>
+
+
+      <!-- VISUALIZATION -->
+
+      <div class="card full">
+
+        <h2>Dynamic Visualization</h2>
+
+        <div class="visualization">
+
+          <div class="chart-placeholder">
+
+            <div class="chart-icon">
+              📉
+            </div>
+
+            <h3>
+              Exponential Distribution Curve
+            </h3>
+
+            <p>
+              Interactive waiting-time curve will be added
+              in the calculation stage.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- INTERPRETATION -->
+
+      <div class="card full">
+
+        <h2>Interpretation of Results</h2>
+
+        <div class="result-box">
+
+          <strong>
+            Result Interpretation
+          </strong>
+
+          <p class="result-placeholder">
+            After calculation is implemented, this section
+            will explain the probability of a cloud request
+            arriving within the selected time interval.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+<!-- ========================================================= -->
+<!-- CENTRAL LIMIT THEOREM -->
+<!-- ========================================================= -->
+
+<section id="clt" class="page">
+
+  <div class="module-header">
+    <div class="container">
+
+      <h1>
+        Central Limit Theorem
+      </h1>
+
+      <p>
+        Warehouse Processing Time
+      </p>
+
+    </div>
+  </div>
+
+
+  <div class="container">
+
+    <div class="content-grid">
+
+      <!-- PROBLEM -->
+
+      <div class="card full problem">
+
+        <h2>📦 Industry Problem</h2>
+
+        <p>
+          A warehouse processes many customer orders every day.
+          The processing time of individual orders can vary
+          depending on the order size, product location,
+          and number of items.
+        </p>
+
+        <br>
+
+        <p>
+          Warehouse managers can use the Central Limit Theorem
+          to understand the behavior of the average processing
+          time for a sample of orders.
+        </p>
+
+      </div>
+
+
+      <!-- INPUT -->
+
+      <div class="card">
+
+        <h2>Input Parameters</h2>
+
+        <div class="input-group">
+
+          <label>
+            Population Mean (μ)
+          </label>
+
+          <input
+            type="number"
+            id="cltMean"
+            placeholder="Example: 30"
+            value="30"
+          />
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Population Standard Deviation (σ)
+          </label>
+
+          <input
+            type="number"
+            id="cltStd"
+            placeholder="Example: 8"
+            value="8"
+          />
+
+        </div>
+
+
+        <div class="input-group">
+
+          <label>
+            Sample Size (n)
+          </label>
+
+          <input
+            type="number"
+            id="cltN"
+            placeholder="Example: 36"
+            value="36"
+          />
+
+        </div>
+
+
+        <button class="calculate-btn"
+                onclick="cltCalculationPlaceholder()">
+          Calculate
+        </button>
+
+      </div>
+
+
+      <!-- FORMULA -->
+
+      <div class="card">
+
+        <h2>Mathematical Formula</h2>
+
+        <div class="formula">
+
+          μ<sub>x̄</sub> = μ
+
+          <br><br>
+
+          σ<sub>x̄</sub> =
+          σ / √n
+
+        </div>
+
+        <p class="formula-note">
+          As the sample size becomes larger, the distribution
+          of sample means approaches a normal distribution.
+        </p>
+
+      </div>
+
+
+      <!-- VISUALIZATION -->
+
+      <div class="card full">
+
+        <h2>Dynamic Visualization</h2>
+
+        <div class="visualization">
+
+          <div class="chart-placeholder">
+
+            <div class="chart-icon">
+              📊
+            </div>
+
+            <h3>
+              Sampling Distribution
+            </h3>
+
+            <p>
+              Interactive visualization of sample means
+              will be added in the calculation stage.
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- INTERPRETATION -->
+
+      <div class="card full">
+
+        <h2>Interpretation of Results</h2>
+
+        <div class="result-box">
+
+          <strong>
+            Result Interpretation
+          </strong>
+
+          <p class="result-placeholder">
+            After calculation is implemented, this section
+            will explain how the sample size affects the
+            distribution of average warehouse processing time.
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+</main>
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer>
+  <p>
+    Continuous Probability Distributions |
+    Undergraduate AIML Learning Application
+  </p>
+</footer>
+
+
+<script>
+
+  /*
+   * ================================
+   * PAGE NAVIGATION
+   * ================================
+   */
+
+  function showPage(pageId) {
+
+    // Hide all pages
+    const pages = document.querySelectorAll(".page");
+
+    pages.forEach(page => {
+      page.classList.remove("active");
+    });
+
+    // Show selected page
+    const selectedPage = document.getElementById(pageId);
+
+    if (selectedPage) {
+      selectedPage.classList.add("active");
+    }
+
+    // Update active navigation button
+    const navButtons = document.querySelectorAll(".nav-btn");
+
+    navButtons.forEach(button => {
+      button.classList.remove("active");
+
+      if (button.dataset.page === pageId) {
+        button.classList.add("active");
+      }
+    });
+
+    // Scroll to top
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+
+
+  /*
+   * ================================
+   * PLACEHOLDER CALCULATIONS
+   * ================================
+   *
+   * These functions are intentionally
+   * not implemented yet.
+   *
+   * They will be replaced with actual
+   * probability calculations and
+   * dynamic charts in the next stage.
+   */
+
+  function normalCalculationPlaceholder() {
+    alert(
+      "Normal Distribution calculation will be implemented next."
+    );
+  }
+
+
+  function exponentialCalculationPlaceholder() {
+    alert(
+      "Exponential Distribution calculation will be implemented next."
+    );
+  }
+
+
+  function cltCalculationPlaceholder() {
+    alert(
+      "Central Limit Theorem calculation will be implemented next."
+    );
+  }
+
+</script>
+
+</body>
+</html>
